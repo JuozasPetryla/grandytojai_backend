@@ -2,7 +2,7 @@
 
 ## Prerequisites
 
-- Docker Desktop [text](https://www.docker.com/)
+- Docker Desktop [docker link](https://www.docker.com/)
 - Java version 21 (JAVA_HOME environment variable added and PATH variable modified)
 
 ## Start the database
