@@ -2,6 +2,9 @@ package com.grandytojai.backend.service;
 
 import java.util.List;
 
+import com.grandytojai.backend.api.dto.computerPartDTO.ComputerPartRequestDTO;
+import com.grandytojai.backend.model.ComputerPart;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -32,4 +35,20 @@ public class ComputerPartService {
 
         return ResponseEntity.ok(responseDTOs);
     }
+
+    public ResponseEntity<ComputerPartResponseDTO> createComputerPart(ComputerPartRequestDTO computerPartRequestDTO) {
+
+        ComputerPart computerPart = new ComputerPart();
+        computerPart.setBarcode(computerPartRequestDTO.getBarcode());
+        computerPart.setPartName(computerPartRequestDTO.getPartName());
+        computerPart.setPartType(computerPartRequestDTO.getPartType());
+        computerPart.setPrice(computerPartRequestDTO.getPrice());
+        computerPart.setImageUrl(computerPartRequestDTO.getImageUrl());
+
+        computerPartRepository.createComputerPart(computerPart);
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(ComputerPartResponseDTO.of(computerPart));
+    }
+
+
 }
