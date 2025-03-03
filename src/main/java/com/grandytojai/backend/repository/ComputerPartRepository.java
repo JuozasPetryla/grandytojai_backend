@@ -1,6 +1,7 @@
 package com.grandytojai.backend.repository;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
@@ -40,4 +41,9 @@ public interface ComputerPartRepository {
             VALUES (#{barcode}, #{partName}, #{partType}, #{price}, #{imageUrl})
             """)
     void createComputerPart(ComputerPart computerPart);
+
+    @Select("""
+            SELECT * FROM computer_part WHERE barcode=#{barcode}
+           """)
+    Optional<ComputerPart> readComputerPartByBarcode(String barcode);
 }

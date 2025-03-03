@@ -1,6 +1,7 @@
 package com.grandytojai.backend.service;
 
 import java.util.List;
+import java.util.Optional;
 
 import com.grandytojai.backend.api.dto.computerPartDTO.ComputerPartRequestDTO;
 import com.grandytojai.backend.model.ComputerPart;
@@ -37,6 +38,11 @@ public class ComputerPartService {
     }
 
     public ResponseEntity<ComputerPartResponseDTO> createComputerPart(ComputerPartRequestDTO computerPartRequestDTO) {
+
+        Optional<ComputerPart> existingPart = computerPartRepository.readComputerPartByBarcode(computerPartRequestDTO.getBarcode());
+        if (existingPart.isPresent()) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(ComputerPartResponseDTO.of(existingPart.get()));
+        }
 
         ComputerPart computerPart = new ComputerPart();
         computerPart.setBarcode(computerPartRequestDTO.getBarcode());
