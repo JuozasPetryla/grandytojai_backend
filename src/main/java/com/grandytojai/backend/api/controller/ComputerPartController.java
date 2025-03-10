@@ -41,6 +41,10 @@ public class ComputerPartController {
         return computerPartService.createComputerPart(computerPartRequestDTO);
     }
 
-
+    @PutMapping
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<ComputerPartResponseDTO> updateComputerPart(@RequestBody ComputerPartRequestDTO computerPartRequestDTO) {
+        return computerPartService.updateComputerPart(computerPartRequestDTO);
+    }
 
 }

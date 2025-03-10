@@ -6,7 +6,9 @@ import java.util.Optional;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.grandytojai.backend.model.ComputerPart;
 
@@ -46,4 +48,14 @@ public interface ComputerPartRepository {
             SELECT * FROM computer_part WHERE barcode=#{barcode}
            """)
     Optional<ComputerPart> readComputerPartByBarcode(String barcode);
+
+    @Update("""
+        UPDATE computer_part SET
+                name=#{partName},
+                type=#{partType},
+                price=#{price},
+                image_url=#{imageUrl}
+        WHERE barcode=#{barcode}
+        """)
+    void updateComputerPart(ComputerPart computerPart);
 }
