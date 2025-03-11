@@ -16,5 +16,7 @@ public class ComputerPartRequestDTO {
     private String partName;    
     private String partType;  
     private Double price;    
-    private String imageUrl;    
+    private String imageUrl; 
+    private String storeUrl;
+    private String storeName;   
 }

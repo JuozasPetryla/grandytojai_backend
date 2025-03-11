@@ -50,6 +50,8 @@ public class ComputerPartService {
         computerPart.setPartType(computerPartRequestDTO.getPartType());
         computerPart.setPrice(computerPartRequestDTO.getPrice());
         computerPart.setImageUrl(computerPartRequestDTO.getImageUrl());
+        computerPart.setStoreUrl(computerPartRequestDTO.getStoreUrl());
+        computerPart.setStoreName(computerPartRequestDTO.getStoreName());
 
         computerPartRepository.createComputerPart(computerPart);
 
