@@ -15,4 +15,6 @@ public class ComputerPart {
     private String partType;
     private Double price;
     private String imageUrl;
+    private String storeUrl;
+    private String storeName;   
 }

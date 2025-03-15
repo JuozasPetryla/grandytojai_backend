@@ -20,7 +20,9 @@ public interface ComputerPartRepository {
                 name AS partName, 
                 type AS partType, 
                 price, 
-                image_url AS imageUrl 
+                image_url AS imageUrl,
+                store_url AS storeUrl,
+                store_name AS storeName
             FROM computer_part
             """)
     List<ComputerPart> readComputerParts();
@@ -30,15 +32,17 @@ public interface ComputerPartRepository {
                 name AS partName, 
                 type AS partType, 
                 price, 
-                image_url AS imageUrl  
+                image_url AS imageUrl,
+                store_url AS storeUrl,
+                store_name AS storeName  
             FROM computer_part
             WHERE type=#{partType}
             """)
     List<ComputerPart> readComputerPartsByType(String partType);
 
     @Insert("""
-            INSERT INTO computer_part (barcode, name, type, price, image_url)
-            VALUES (#{barcode}, #{partName}, #{partType}, #{price}, #{imageUrl})
+            INSERT INTO computer_part (barcode, name, type, price, image_url, store_url, store_name)
+            VALUES (#{barcode}, #{partName}, #{partType}, #{price}, #{imageUrl}, #{storeUrl}, #{storeName})
             """)
     void createComputerPart(ComputerPart computerPart);
 

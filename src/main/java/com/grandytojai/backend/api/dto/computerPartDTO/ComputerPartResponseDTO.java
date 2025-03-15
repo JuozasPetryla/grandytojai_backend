@@ -22,6 +22,8 @@ public class ComputerPartResponseDTO {
     @NonNull
     private Double price;
     private String imageUrl;
+    private String storeUrl;
+    private String storeName;
 
     public static ComputerPartResponseDTO of(ComputerPart computerPart) {
         return ComputerPartResponseDTO.builder()
@@ -30,6 +32,8 @@ public class ComputerPartResponseDTO {
             .partType(computerPart.getPartType())
             .price(computerPart.getPrice())
             .imageUrl(computerPart.getImageUrl())
+            .storeUrl(computerPart.getStoreUrl())
+            .storeName(computerPart.getStoreName())
             .build();
     }
 }
