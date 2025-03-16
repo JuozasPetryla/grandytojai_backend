@@ -6,6 +6,7 @@ import java.util.Optional;
 import com.grandytojai.backend.api.dto.computerPartDTO.ComputerPartRequestDTO;
 import com.grandytojai.backend.model.ComputerPart;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -58,5 +59,21 @@ public class ComputerPartService {
         return ResponseEntity.status(HttpStatus.CREATED).body(ComputerPartResponseDTO.of(computerPart));
     }
 
+    public ResponseEntity<ComputerPartResponseDTO> updateComputerPart(ComputerPartRequestDTO computerPartRequestDTO) {
+        ComputerPart computerPart = ComputerPart.builder()
+        .barcode(computerPartRequestDTO.getBarcode())
+        .partName(computerPartRequestDTO.getPartName())
+        .partType(computerPartRequestDTO.getPartType())
+        .price(computerPartRequestDTO.getPrice())
+        .imageUrl(computerPartRequestDTO.getImageUrl())
+        .build();
+        
+        if (!computerPartRepository.readComputerPartByBarcode(computerPart.getBarcode()).isPresent()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ComputerPartResponseDTO.of(computerPart));
+        }
 
+        computerPartRepository.updateComputerPart(computerPart);
+
+        return ResponseEntity.status(HttpStatus.OK).body(ComputerPartResponseDTO.of(computerPart));
+    }
 }
