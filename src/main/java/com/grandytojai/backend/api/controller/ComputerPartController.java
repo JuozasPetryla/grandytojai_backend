@@ -28,6 +28,11 @@ public class ComputerPartController {
         return computerPartService.readComputerPartsByType(partType);
     }
 
+    @GetMapping(value = "/best_deals")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<List<ComputerPartResponseDTO>> readComputerPartsDeals() {
+        return computerPartService.readComputerPartsDeals();
+    }
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)

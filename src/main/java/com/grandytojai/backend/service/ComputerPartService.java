@@ -28,6 +28,14 @@ public class ComputerPartService {
 
         return ResponseEntity.ok(responseDTOs);
     }
+    public ResponseEntity<List<ComputerPartResponseDTO>> readComputerPartsDeals() {
+        List<ComputerPartResponseDTO> responseDTOs = computerPartRepository.readComputerPartsDeal()
+            .stream()
+            .map(ComputerPartResponseDTO::of)
+            .toList();
+
+        return ResponseEntity.ok(responseDTOs);
+    }
 
     public ResponseEntity<List<ComputerPartResponseDTO>> readComputerParts() {
         List<ComputerPartResponseDTO> responseDTOs = computerPartRepository.readComputerParts()
