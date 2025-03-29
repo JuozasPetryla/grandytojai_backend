@@ -8,7 +8,6 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.grandytojai.backend.model.ComputerPart;
 
@@ -25,9 +24,9 @@ public interface ComputerPartRepository {
                 image_url AS imageUrl,
                 store_url AS storeUrl,
                 store_name AS storeName
-            FROM computer_part
+            FROM computer_part LIMIT #{limit} OFFSET #{offset}
             """)
-    List<ComputerPart> readComputerParts();
+    List<ComputerPart> readComputerParts(int limit, int offset);
     
     @Select("""
             SELECT barcode, 
@@ -62,8 +61,10 @@ public interface ComputerPartRepository {
             FROM computer_part
         ) ranked
         WHERE row_num <= 2
+        ORDER BY partType, price
+        LIMIT #{limit} OFFSET #{offset}
         """)
-    List<ComputerPart> readComputerPartsDeal();
+    List<ComputerPart> readComputerPartsDeal(int limit, int offset);
 
     @Insert("""
             INSERT INTO computer_part (barcode, name, type, price, image_url, store_url, store_name)
@@ -72,9 +73,9 @@ public interface ComputerPartRepository {
     void createComputerPart(ComputerPart computerPart);
 
     @Select("""
-            SELECT * FROM computer_part WHERE barcode=#{barcode}
+            SELECT * FROM computer_part WHERE barcode=#{barcode} and store_name=#{storeName}
            """)
-    Optional<ComputerPart> readComputerPartByBarcode(String barcode);
+    Optional<ComputerPart> readComputerPartByBarcodeAndStore(String barcode, String storeName);
 
     @Update("""
         UPDATE computer_part SET
@@ -82,7 +83,8 @@ public interface ComputerPartRepository {
                 type=#{partType},
                 price=#{price},
                 image_url=#{imageUrl}
-        WHERE barcode=#{barcode}
+                store_url=#{storeUrl}
+        WHERE barcode=#{barcode} and store_name=#{storeName} 
         """)
     void updateComputerPart(ComputerPart computerPart);
 }

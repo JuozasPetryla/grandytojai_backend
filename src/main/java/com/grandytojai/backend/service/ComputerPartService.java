@@ -28,8 +28,9 @@ public class ComputerPartService {
 
         return ResponseEntity.ok(responseDTOs);
     }
-    public ResponseEntity<List<ComputerPartResponseDTO>> readComputerPartsDeals() {
-        List<ComputerPartResponseDTO> responseDTOs = computerPartRepository.readComputerPartsDeal()
+    public ResponseEntity<List<ComputerPartResponseDTO>> readComputerPartsDeals(int limit, int page) {
+        int offset = limit * (page - 1);
+        List<ComputerPartResponseDTO> responseDTOs = computerPartRepository.readComputerPartsDeal(limit, offset)
             .stream()
             .map(ComputerPartResponseDTO::of)
             .toList();
@@ -37,8 +38,9 @@ public class ComputerPartService {
         return ResponseEntity.ok(responseDTOs);
     }
 
-    public ResponseEntity<List<ComputerPartResponseDTO>> readComputerParts() {
-        List<ComputerPartResponseDTO> responseDTOs = computerPartRepository.readComputerParts()
+    public ResponseEntity<List<ComputerPartResponseDTO>> readComputerParts(int limit, int page) {
+        int offset = limit * (page - 1);
+        List<ComputerPartResponseDTO> responseDTOs = computerPartRepository.readComputerParts(limit, offset)
             .stream()
             .map(ComputerPartResponseDTO::of)
             .toList();
@@ -48,7 +50,7 @@ public class ComputerPartService {
 
     public ResponseEntity<ComputerPartResponseDTO> createComputerPart(ComputerPartRequestDTO computerPartRequestDTO) {
 
-        Optional<ComputerPart> existingPart = computerPartRepository.readComputerPartByBarcode(computerPartRequestDTO.getBarcode());
+        Optional<ComputerPart> existingPart = computerPartRepository.readComputerPartByBarcodeAndStore(computerPartRequestDTO.getBarcode(), computerPartRequestDTO.getStoreName());
         if (existingPart.isPresent()) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body(ComputerPartResponseDTO.of(existingPart.get()));
         }
@@ -76,7 +78,7 @@ public class ComputerPartService {
         .imageUrl(computerPartRequestDTO.getImageUrl())
         .build();
         
-        if (!computerPartRepository.readComputerPartByBarcode(computerPart.getBarcode()).isPresent()) {
+        if (!computerPartRepository.readComputerPartByBarcodeAndStore(computerPart.getBarcode(), computerPart.getStoreName()).isPresent()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ComputerPartResponseDTO.of(computerPart));
         }
 
