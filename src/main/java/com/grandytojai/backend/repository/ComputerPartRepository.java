@@ -16,6 +16,12 @@ import com.grandytojai.backend.model.ComputerPart;
 public interface ComputerPartRepository {
 
     @Select("""
+            SELECT COUNT(DISTINCT barcode) 
+            FROM computer_part
+            """)
+    Integer countUniqueComputerParts();
+    
+    @Select("""
             SELECT 
                 barcode, 
                 name AS partName, 
@@ -24,7 +30,8 @@ public interface ComputerPartRepository {
                 image_url AS imageUrl,
                 store_url AS storeUrl,
                 store_name AS storeName
-            FROM computer_part LIMIT #{limit} OFFSET #{offset}
+            FROM computer_part
+            LIMIT #{limit} OFFSET #{offset}
             """)
     List<ComputerPart> readComputerParts(int limit, int offset);
     
@@ -38,8 +45,9 @@ public interface ComputerPartRepository {
                 store_name AS storeName  
             FROM computer_part
             WHERE type=#{partType}
+            LIMIT #{limit} OFFSET #{offset}
             """)
-    List<ComputerPart> readComputerPartsByType(String partType);
+    List<ComputerPart> readComputerPartsByType(String partType, int limit, int offset);
 
     @Select("""
         SELECT barcode, 

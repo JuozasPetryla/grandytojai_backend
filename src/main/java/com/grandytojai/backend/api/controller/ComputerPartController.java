@@ -22,19 +22,23 @@ public class ComputerPartController {
 
     private final ComputerPartService computerPartService;
 
+    @GetMapping(value = "/count")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<Integer> countUniqueComputerParts() {
+        return computerPartService.countUniqueComputerParts();
+    }
+    
     @GetMapping(value = "/{partType}")
     @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<List<ComputerPartResponseDTO>> readComputerPartsByType(@PathVariable(value="partType") String partType) {
-        return computerPartService.readComputerPartsByType(partType);
+    public ResponseEntity<List<ComputerPartResponseDTO>> readComputerPartsByType(@PathVariable(value="partType") String partType, @RequestParam(defaultValue = "100") int limit, @RequestParam(defaultValue = "1") int page) {
+        return computerPartService.readComputerPartsByType(partType, limit, page);
     }
-
 
     @GetMapping(value = "/best-deals")
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<List<ComputerPartResponseDTO>> readComputerPartsDeals(@RequestParam(defaultValue = "100") int limit, @RequestParam(defaultValue = "1") int page) {
         return computerPartService.readComputerPartsDeals(limit, page);
     }
-
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)

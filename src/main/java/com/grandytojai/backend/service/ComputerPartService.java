@@ -20,8 +20,14 @@ import lombok.AllArgsConstructor;
 public class ComputerPartService {
     private final ComputerPartRepository computerPartRepository;
 
-    public ResponseEntity<List<ComputerPartResponseDTO>> readComputerPartsByType(String partType) {
-        List<ComputerPartResponseDTO> responseDTOs = computerPartRepository.readComputerPartsByType(partType)
+    public ResponseEntity<Integer> countUniqueComputerParts() {
+        Integer count = computerPartRepository.countUniqueComputerParts();
+        return ResponseEntity.ok(count);
+    }
+    
+    public ResponseEntity<List<ComputerPartResponseDTO>> readComputerPartsByType(String partType, int limit, int page) {
+        int offset = limit * (page - 1);
+        List<ComputerPartResponseDTO> responseDTOs = computerPartRepository.readComputerPartsByType(partType, limit, offset)
             .stream()
             .map(ComputerPartResponseDTO::of)
             .toList();
