@@ -41,6 +41,31 @@ public interface ComputerPartRepository {
             """)
     List<ComputerPart> readComputerPartsByType(String partType);
 
+    @Select("""
+        SELECT barcode, 
+               name AS partName, 
+               type AS partType, 
+               price, 
+               image_url AS imageUrl,
+               store_url AS storeUrl,
+               store_name AS storeName  
+        FROM (
+            SELECT barcode, 
+                   name, 
+                   type, 
+                   price, 
+                   image_url, 
+                   store_url, 
+                   store_name,
+                   ROW_NUMBER() OVER (PARTITION BY type ORDER BY price ASC) AS row_num
+            FROM computer_part
+        ) ranked
+        WHERE row_num <= 2
+        ORDER BY partType, price
+        LIMIT #{limit} OFFSET #{offset}
+        """)
+    List<ComputerPart> readComputerPartsDeal(int limit, int offset);
+
     @Insert("""
             INSERT INTO computer_part (barcode, name, type, price, image_url, store_url, store_name)
             VALUES (#{barcode}, #{partName}, #{partType}, #{price}, #{imageUrl}, #{storeUrl}, #{storeName})

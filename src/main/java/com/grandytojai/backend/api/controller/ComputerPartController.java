@@ -28,6 +28,14 @@ public class ComputerPartController {
         return computerPartService.readComputerPartsByType(partType);
     }
 
+
+    @GetMapping(value = "/best-deals")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<List<ComputerPartResponseDTO>> readComputerPartsDeals(@RequestParam(defaultValue = "100") int limit, @RequestParam(defaultValue = "1") int page) {
+        return computerPartService.readComputerPartsDeals(limit, page);
+    }
+
+
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<List<ComputerPartResponseDTO>> readComputerParts(@RequestParam(defaultValue = "100") int limit, @RequestParam(defaultValue = "1") int page) {

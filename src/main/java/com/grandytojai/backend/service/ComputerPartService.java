@@ -28,6 +28,15 @@ public class ComputerPartService {
 
         return ResponseEntity.ok(responseDTOs);
     }
+    public ResponseEntity<List<ComputerPartResponseDTO>> readComputerPartsDeals(int limit, int page) {
+        int offset = limit * (page - 1);
+        List<ComputerPartResponseDTO> responseDTOs = computerPartRepository.readComputerPartsDeal(limit, offset)
+            .stream()
+            .map(ComputerPartResponseDTO::of)
+            .toList();
+
+        return ResponseEntity.ok(responseDTOs);
+    }
 
     public ResponseEntity<List<ComputerPartResponseDTO>> readComputerParts(int limit, int page) {
         int offset = limit * (page - 1);
