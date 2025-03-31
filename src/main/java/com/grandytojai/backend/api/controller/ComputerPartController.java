@@ -6,8 +6,8 @@ import com.grandytojai.backend.api.dto.computerPartDTO.ComputerPartRequestDTO;
 import com.grandytojai.backend.service.ComputerPartService;
 
 import java.util.List;
+import java.util.Optional;
 
-import lombok.NonNull;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -24,8 +24,8 @@ public class ComputerPartController {
 
     @GetMapping(value = "/count")
     @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<Integer> countUniqueComputerParts() {
-        return computerPartService.countUniqueComputerParts();
+    public ResponseEntity<Integer> countUniqueComputerParts(@RequestParam(required = false) Optional<String> searchValue) {
+        return computerPartService.countUniqueComputerParts(searchValue);
     }
     
     @GetMapping(value = "/{partType}")
@@ -36,14 +36,22 @@ public class ComputerPartController {
 
     @GetMapping(value = "/best-deals")
     @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<List<ComputerPartResponseDTO>> readComputerPartsDeals(@RequestParam(defaultValue = "100") int limit, @RequestParam(defaultValue = "1") int page) {
-        return computerPartService.readComputerPartsDeals(limit, page);
+    public ResponseEntity<List<ComputerPartResponseDTO>> readComputerPartsDeals(
+        @RequestParam(defaultValue = "100") int limit, 
+        @RequestParam(defaultValue = "1") int page, 
+        @RequestParam(required = false) Optional<String> searchValue
+    ) {
+        return computerPartService.readComputerPartsDeals(limit, page, searchValue);
     }
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<List<ComputerPartResponseDTO>> readComputerParts(@RequestParam(defaultValue = "100") int limit, @RequestParam(defaultValue = "1") int page) {
-        return computerPartService.readComputerParts(limit, page);
+    public ResponseEntity<List<ComputerPartResponseDTO>> readComputerParts(
+        @RequestParam(defaultValue = "100") int limit, 
+        @RequestParam(defaultValue = "1") int page, 
+        @RequestParam(required = false) Optional<String> searchValue
+    ) {
+        return computerPartService.readComputerParts(limit, page, searchValue);
     }
 
     @PostMapping

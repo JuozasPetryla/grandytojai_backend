@@ -20,6 +20,15 @@ public interface ComputerPartRepository {
             FROM computer_part
             """)
     Integer countUniqueComputerParts();
+
+    @Select("""
+            SELECT COUNT(DISTINCT barcode) 
+            FROM computer_part
+            WHERE
+                UPPER(barcode) LIKE CONCAT('%', UPPER(#{searchValue}), '%')
+                OR UPPER(name) LIKE CONCAT('%', UPPER(#{searchValue}), '%')
+            """)
+    Integer countUniqueComputerPartsBySearchValue(String searchValue);
     
     @Select("""
             SELECT 
@@ -34,6 +43,23 @@ public interface ComputerPartRepository {
             LIMIT #{limit} OFFSET #{offset}
             """)
     List<ComputerPart> readComputerParts(int limit, int offset);
+
+    @Select("""
+            SELECT 
+                barcode, 
+                name AS partName, 
+                type AS partType, 
+                price, 
+                image_url AS imageUrl,
+                store_url AS storeUrl,
+                store_name AS storeName
+            FROM computer_part
+            WHERE
+                UPPER(barcode) LIKE CONCAT('%', UPPER(#{searchValue}), '%')
+                OR UPPER(name) LIKE CONCAT('%', UPPER(#{searchValue}), '%')
+            LIMIT #{limit} OFFSET #{offset}
+            """)
+    List<ComputerPart> readComputerPartsBySearchValue(int limit, int offset, String searchValue);
     
     @Select("""
             SELECT barcode, 
@@ -48,6 +74,35 @@ public interface ComputerPartRepository {
             LIMIT #{limit} OFFSET #{offset}
             """)
     List<ComputerPart> readComputerPartsByType(String partType, int limit, int offset);
+
+    @Select("""
+        SELECT barcode, 
+               name AS partName, 
+               type AS partType, 
+               price, 
+               image_url AS imageUrl,
+               store_url AS storeUrl,
+               store_name AS storeName  
+        FROM (
+            SELECT barcode, 
+                   name,
+                   type, 
+                   price, 
+                   image_url, 
+                   store_url, 
+                   store_name,
+                   ROW_NUMBER() OVER (PARTITION BY type ORDER BY price ASC) AS row_num
+            FROM computer_part
+        ) ranked
+        WHERE row_num <= 2 AND
+            (   
+                UPPER(barcode) LIKE CONCAT('%', UPPER(#{searchValue}), '%')
+                OR UPPER(name) LIKE CONCAT('%', UPPER(#{searchValue}), '%')
+            )
+        ORDER BY partType, price
+        LIMIT #{limit} OFFSET #{offset}
+        """)
+    List<ComputerPart> readComputerPartsDealBySearchValue(int limit, int offset, String searchValue);
 
     @Select("""
         SELECT barcode, 

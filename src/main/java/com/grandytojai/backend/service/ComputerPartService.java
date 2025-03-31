@@ -20,7 +20,11 @@ import lombok.AllArgsConstructor;
 public class ComputerPartService {
     private final ComputerPartRepository computerPartRepository;
 
-    public ResponseEntity<Integer> countUniqueComputerParts() {
+    public ResponseEntity<Integer> countUniqueComputerParts(Optional<String> searchValue) {
+        if (searchValue.isPresent()) {
+            Integer count = computerPartRepository.countUniqueComputerPartsBySearchValue(searchValue.get());
+            return ResponseEntity.ok(count);
+        }
         Integer count = computerPartRepository.countUniqueComputerParts();
         return ResponseEntity.ok(count);
     }
@@ -34,8 +38,18 @@ public class ComputerPartService {
 
         return ResponseEntity.ok(responseDTOs);
     }
-    public ResponseEntity<List<ComputerPartResponseDTO>> readComputerPartsDeals(int limit, int page) {
+    public ResponseEntity<List<ComputerPartResponseDTO>> readComputerPartsDeals(int limit, int page, Optional<String> searchValue) {
         int offset = limit * (page - 1);
+
+        if (searchValue.isPresent()) {
+            List<ComputerPartResponseDTO> responseDTOs = computerPartRepository.readComputerPartsBySearchValue(limit, offset, searchValue.get())
+            .stream()
+            .map(ComputerPartResponseDTO::of)
+            .toList();
+
+            return ResponseEntity.ok(responseDTOs);
+        }
+
         List<ComputerPartResponseDTO> responseDTOs = computerPartRepository.readComputerPartsDeal(limit, offset)
             .stream()
             .map(ComputerPartResponseDTO::of)
@@ -44,8 +58,18 @@ public class ComputerPartService {
         return ResponseEntity.ok(responseDTOs);
     }
 
-    public ResponseEntity<List<ComputerPartResponseDTO>> readComputerParts(int limit, int page) {
+    public ResponseEntity<List<ComputerPartResponseDTO>> readComputerParts(int limit, int page, Optional<String> searchValue) {
         int offset = limit * (page - 1);
+
+        if (searchValue.isPresent()) {
+            List<ComputerPartResponseDTO> responseDTOs = computerPartRepository.readComputerPartsBySearchValue(limit, offset, searchValue.get())
+            .stream()
+            .map(ComputerPartResponseDTO::of)
+            .toList();
+
+            return ResponseEntity.ok(responseDTOs);
+        }
+
         List<ComputerPartResponseDTO> responseDTOs = computerPartRepository.readComputerParts(limit, offset)
             .stream()
             .map(ComputerPartResponseDTO::of)
