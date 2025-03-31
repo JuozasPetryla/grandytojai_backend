@@ -34,6 +34,12 @@ public class ComputerPartController {
         return computerPartService.readComputerPartsByType(partType, limit, page);
     }
 
+    @GetMapping(value = "/part/{barcode}")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<List<ComputerPartResponseDTO>> readComputerPartsByBarcode(@PathVariable(value="barcode") String barcode) {
+        return computerPartService.readComputerPartsByBarcode(barcode);
+    }
+
     @GetMapping(value = "/best-deals")
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<List<ComputerPartResponseDTO>> readComputerPartsDeals(

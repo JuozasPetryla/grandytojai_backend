@@ -32,7 +32,7 @@ public interface ComputerPartRepository {
     
     @Select("""
             SELECT 
-                barcode, 
+                DISTINCT barcode, 
                 name AS partName, 
                 type AS partType, 
                 price, 
@@ -40,13 +40,14 @@ public interface ComputerPartRepository {
                 store_url AS storeUrl,
                 store_name AS storeName
             FROM computer_part
+            ORDER BY name, price
             LIMIT #{limit} OFFSET #{offset}
             """)
     List<ComputerPart> readComputerParts(int limit, int offset);
 
     @Select("""
             SELECT 
-                barcode, 
+                DISTINCT barcode, 
                 name AS partName, 
                 type AS partType, 
                 price, 
@@ -57,12 +58,13 @@ public interface ComputerPartRepository {
             WHERE
                 UPPER(barcode) LIKE CONCAT('%', UPPER(#{searchValue}), '%')
                 OR UPPER(name) LIKE CONCAT('%', UPPER(#{searchValue}), '%')
+            ORDER BY name, price
             LIMIT #{limit} OFFSET #{offset}
             """)
     List<ComputerPart> readComputerPartsBySearchValue(int limit, int offset, String searchValue);
     
     @Select("""
-            SELECT barcode, 
+            SELECT DISTINCT barcode, 
                 name AS partName, 
                 type AS partType, 
                 price, 
@@ -71,12 +73,13 @@ public interface ComputerPartRepository {
                 store_name AS storeName  
             FROM computer_part
             WHERE type=#{partType}
+            ORDER BY name, price
             LIMIT #{limit} OFFSET #{offset}
             """)
     List<ComputerPart> readComputerPartsByType(String partType, int limit, int offset);
 
     @Select("""
-        SELECT barcode, 
+        SELECT DISTINCT barcode, 
                name AS partName, 
                type AS partType, 
                price, 
@@ -105,7 +108,7 @@ public interface ComputerPartRepository {
     List<ComputerPart> readComputerPartsDealBySearchValue(int limit, int offset, String searchValue);
 
     @Select("""
-        SELECT barcode, 
+        SELECT DISTINCT barcode, 
                name AS partName, 
                type AS partType, 
                price, 
@@ -150,4 +153,17 @@ public interface ComputerPartRepository {
         WHERE barcode=#{barcode} and store_name=#{storeName} 
         """)
     void updateComputerPart(ComputerPart computerPart);
+
+    @Select("""
+            SELECT 
+                barcode, 
+               name AS partName, 
+               type AS partType, 
+               price, 
+               image_url AS imageUrl,
+               store_url AS storeUrl,
+               store_name AS storeName
+            FROM computer_part WHERE barcode=#{barcode} ORDER BY price
+            """)
+    List<ComputerPart> readComputerPartByBarcode(String barcode);
 }

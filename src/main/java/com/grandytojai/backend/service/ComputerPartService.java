@@ -6,7 +6,6 @@ import java.util.Optional;
 import com.grandytojai.backend.api.dto.computerPartDTO.ComputerPartRequestDTO;
 import com.grandytojai.backend.model.ComputerPart;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -19,6 +18,15 @@ import lombok.AllArgsConstructor;
 @AllArgsConstructor
 public class ComputerPartService {
     private final ComputerPartRepository computerPartRepository;
+
+    public ResponseEntity<List<ComputerPartResponseDTO>> readComputerPartsByBarcode(String barcode) {
+        List<ComputerPartResponseDTO> responseDTOs = computerPartRepository.readComputerPartByBarcode(barcode)
+            .stream()
+            .map(ComputerPartResponseDTO::of)
+            .toList();
+
+        return ResponseEntity.ok(responseDTOs);
+    }
 
     public ResponseEntity<Integer> countUniqueComputerParts(Optional<String> searchValue) {
         if (searchValue.isPresent()) {
