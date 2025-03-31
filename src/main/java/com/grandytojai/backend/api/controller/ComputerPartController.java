@@ -5,6 +5,9 @@ import com.grandytojai.backend.api.dto.computerPartDTO.ComputerPartResponseDTO;
 import com.grandytojai.backend.api.dto.computerPartDTO.ComputerPartRequestDTO;
 import com.grandytojai.backend.service.ComputerPartService;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Optional;
 
@@ -34,10 +37,10 @@ public class ComputerPartController {
         return computerPartService.readComputerPartsByType(partType, limit, page);
     }
 
-    @GetMapping(value = "/part/{barcode}")
+    @GetMapping(value = "/part")
     @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<List<ComputerPartResponseDTO>> readComputerPartsByBarcode(@PathVariable(value="barcode") String barcode) {
-        return computerPartService.readComputerPartsByBarcode(barcode);
+    public ResponseEntity<List<ComputerPartResponseDTO>> readComputerPartsByBarcode(@RequestParam String barcode) throws UnsupportedEncodingException{
+        return computerPartService.readComputerPartsByBarcode(URLDecoder.decode(barcode, StandardCharsets.UTF_8));
     }
 
     @GetMapping(value = "/best-deals")
