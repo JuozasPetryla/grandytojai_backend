@@ -29,6 +29,13 @@ public interface ComputerPartRepository {
                 OR UPPER(name) LIKE CONCAT('%', UPPER(#{searchValue}), '%')
             """)
     Integer countUniqueComputerPartsBySearchValue(String searchValue);
+
+    @Select("""
+            SELECT COUNT(DISTINCT barcode)
+            FROM computer_part
+            WHERE UPPER(type) = UPPER(#{type})
+            """)
+    Integer countUniqueComputerPartsByType(String type);
     
     @Select("""
             SELECT 

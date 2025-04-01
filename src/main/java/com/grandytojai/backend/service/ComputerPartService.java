@@ -36,6 +36,15 @@ public class ComputerPartService {
         Integer count = computerPartRepository.countUniqueComputerParts();
         return ResponseEntity.ok(count);
     }
+
+    public ResponseEntity<Integer> countUniqueComputerPartsByType(Optional<String> category) {
+        if (category.isPresent()) {
+            Integer count = computerPartRepository.countUniqueComputerPartsByType(category.get());
+            return ResponseEntity.ok(count);
+        }
+        Integer count=0;
+        return ResponseEntity.ok(count);
+    }
     
     public ResponseEntity<List<ComputerPartResponseDTO>> readComputerPartsByType(String partType, int limit, int page) {
         int offset = limit * (page - 1);
