@@ -30,6 +30,12 @@ public class ComputerPartController {
     public ResponseEntity<Integer> countUniqueComputerParts(@RequestParam(required = false) Optional<String> searchValue) {
         return computerPartService.countUniqueComputerParts(searchValue);
     }
+
+    @GetMapping(value = "/countByType")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<Integer> countUniqueComputerPartsByType(@RequestParam(required = false) Optional<String> category) {
+        return computerPartService.countUniqueComputerPartsByType(category);
+    }
     
     @GetMapping(value = "/{partType}")
     @ResponseStatus(HttpStatus.OK)
