@@ -45,7 +45,8 @@ public interface ComputerPartRepository {
                 price, 
                 image_url AS imageUrl,
                 store_url AS storeUrl,
-                store_name AS storeName
+                store_name AS storeName,
+                has_discount AS hasDiscount
             FROM computer_part
             ORDER BY name, price
             LIMIT #{limit} OFFSET #{offset}
@@ -60,7 +61,8 @@ public interface ComputerPartRepository {
                 price, 
                 image_url AS imageUrl,
                 store_url AS storeUrl,
-                store_name AS storeName
+                store_name AS storeName,
+                has_discount AS hasDiscount
             FROM computer_part
             WHERE
                 UPPER(barcode) LIKE CONCAT('%', UPPER(#{searchValue}), '%')
@@ -77,7 +79,8 @@ public interface ComputerPartRepository {
                 price, 
                 image_url AS imageUrl,
                 store_url AS storeUrl,
-                store_name AS storeName  
+                store_name AS storeName,
+                has_discount AS hasDiscount
             FROM computer_part
             WHERE type=#{partType}
             ORDER BY name, price
@@ -92,19 +95,10 @@ public interface ComputerPartRepository {
                price, 
                image_url AS imageUrl,
                store_url AS storeUrl,
-               store_name AS storeName  
-        FROM (
-            SELECT barcode, 
-                   name,
-                   type, 
-                   price, 
-                   image_url, 
-                   store_url, 
-                   store_name,
-                   ROW_NUMBER() OVER (PARTITION BY type ORDER BY price ASC) AS row_num
-            FROM computer_part
-        ) ranked
-        WHERE row_num <= 2 AND
+               store_name AS storeName,
+               has_discount AS hasDiscount
+        FROM computer_part
+        WHERE has_discount = true AND
             (   
                 UPPER(barcode) LIKE CONCAT('%', UPPER(#{searchValue}), '%')
                 OR UPPER(name) LIKE CONCAT('%', UPPER(#{searchValue}), '%')
@@ -121,27 +115,18 @@ public interface ComputerPartRepository {
                price, 
                image_url AS imageUrl,
                store_url AS storeUrl,
-               store_name AS storeName  
-        FROM (
-            SELECT barcode, 
-                   name, 
-                   type, 
-                   price, 
-                   image_url, 
-                   store_url, 
-                   store_name,
-                   ROW_NUMBER() OVER (PARTITION BY type ORDER BY price ASC) AS row_num
-            FROM computer_part
-        ) ranked
-        WHERE row_num <= 2
+               store_name AS storeName,
+               has_discount AS hasDiscount
+        FROM computer_part
+        WHERE has_discount = true
         ORDER BY partType, price
         LIMIT #{limit} OFFSET #{offset}
         """)
     List<ComputerPart> readComputerPartsDeal(int limit, int offset);
 
     @Insert("""
-            INSERT INTO computer_part (barcode, name, type, price, image_url, store_url, store_name)
-            VALUES (#{barcode}, #{partName}, #{partType}, #{price}, #{imageUrl}, #{storeUrl}, #{storeName})
+            INSERT INTO computer_part (barcode, name, type, price, image_url, store_url, store_name, has_discount)
+            VALUES (#{barcode}, #{partName}, #{partType}, #{price}, #{imageUrl}, #{storeUrl}, #{storeName}, #{hasDiscount})
             """)
     void createComputerPart(ComputerPart computerPart);
 
@@ -157,6 +142,7 @@ public interface ComputerPartRepository {
                 price=#{price},
                 image_url=#{imageUrl}
                 store_url=#{storeUrl}
+                has_discount=#{hasDiscount}
         WHERE barcode=#{barcode} and store_name=#{storeName} 
         """)
     void updateComputerPart(ComputerPart computerPart);
@@ -169,7 +155,8 @@ public interface ComputerPartRepository {
                price, 
                image_url AS imageUrl,
                store_url AS storeUrl,
-               store_name AS storeName
+               store_name AS storeName,
+               has_discount AS hasDiscount
             FROM computer_part WHERE barcode=#{barcode} ORDER BY price
             """)
     List<ComputerPart> readComputerPartByBarcode(String barcode);

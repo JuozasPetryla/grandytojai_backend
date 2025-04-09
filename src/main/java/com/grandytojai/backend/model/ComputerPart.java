@@ -16,5 +16,6 @@ public class ComputerPart {
     private Double price;
     private String imageUrl;
     private String storeUrl;
-    private String storeName;   
+    private String storeName;
+    private Boolean hasDiscount;
 }
