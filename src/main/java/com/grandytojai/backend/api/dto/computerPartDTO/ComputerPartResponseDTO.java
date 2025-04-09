@@ -24,6 +24,7 @@ public class ComputerPartResponseDTO {
     private String imageUrl;
     private String storeUrl;
     private String storeName;
+    private Boolean hasDiscount;
 
     public static ComputerPartResponseDTO of(ComputerPart computerPart) {
         return ComputerPartResponseDTO.builder()
@@ -34,6 +35,7 @@ public class ComputerPartResponseDTO {
             .imageUrl(computerPart.getImageUrl())
             .storeUrl(computerPart.getStoreUrl())
             .storeName(computerPart.getStoreName())
+            .hasDiscount(computerPart.getHasDiscount())
             .build();
     }
 }

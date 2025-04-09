@@ -110,6 +110,7 @@ public class ComputerPartService {
         computerPart.setImageUrl(computerPartRequestDTO.getImageUrl());
         computerPart.setStoreUrl(computerPartRequestDTO.getStoreUrl());
         computerPart.setStoreName(computerPartRequestDTO.getStoreName());
+        computerPart.setHasDiscount(computerPartRequestDTO.getHasDiscount());
 
         computerPartRepository.createComputerPart(computerPart);
 
@@ -123,6 +124,9 @@ public class ComputerPartService {
         .partType(computerPartRequestDTO.getPartType())
         .price(computerPartRequestDTO.getPrice())
         .imageUrl(computerPartRequestDTO.getImageUrl())
+        .storeUrl(computerPartRequestDTO.getStoreUrl())
+        .storeName(computerPartRequestDTO.getStoreName())
+        .hasDiscount(computerPartRequestDTO.getHasDiscount())
         .build();
         
         if (!computerPartRepository.readComputerPartByBarcodeAndStore(computerPart.getBarcode(), computerPart.getStoreName()).isPresent()) {
