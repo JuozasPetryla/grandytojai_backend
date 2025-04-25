@@ -148,16 +148,16 @@ public interface ComputerPartRepository {
     void updateComputerPart(ComputerPart computerPart);
 
     @Select("""
-            SELECT 
-                barcode, 
-               name AS partName, 
-               type AS partType, 
-               price, 
-               image_url AS imageUrl,
-               store_url AS storeUrl,
-               store_name AS storeName,
-               has_discount AS hasDiscount
-            FROM computer_part WHERE barcode=#{barcode} ORDER BY price
+            SELECT DISTINCT barcode, 
+                name AS partName, 
+                type AS partType, 
+                price, 
+                image_url AS imageUrl,
+                store_url AS storeUrl,
+                store_name AS storeName,
+                has_discount AS hasDiscount,
+                ROW_NUMBER() OVER(PARTITION BY barcode ORDER BY price) AS row_number
+            FROM computer_part WHERE barcode IN ('${barcode}')
             """)
     List<ComputerPart> readComputerPartByBarcode(String barcode);
 }
