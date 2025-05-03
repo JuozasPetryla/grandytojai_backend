@@ -5,6 +5,8 @@ import java.util.Optional;
 
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Result;
+import org.apache.ibatis.annotations.Results;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 import org.springframework.stereotype.Repository;
@@ -130,9 +132,15 @@ public interface ComputerPartRepository {
             """)
     void createComputerPart(ComputerPart computerPart);
 
-    @Select("""
-            SELECT * FROM computer_part WHERE barcode=#{barcode} and store_name=#{storeName}
-           """)
+    @Select("SELECT * FROM computer_part WHERE barcode = #{barcode} AND store_name = #{storeName}")
+    @Results({
+        @Result(property = "partName", column = "name"),
+        @Result(property = "partType", column = "type"),
+        @Result(property = "imageUrl", column = "image_url"),
+        @Result(property = "storeUrl", column = "store_url"),
+        @Result(property = "storeName", column = "store_name"),
+        @Result(property = "hasDiscount", column = "has_discount")
+    })
     Optional<ComputerPart> readComputerPartByBarcodeAndStore(String barcode, String storeName);
 
     @Update("""
@@ -140,8 +148,8 @@ public interface ComputerPartRepository {
                 name=#{partName},
                 type=#{partType},
                 price=#{price},
-                image_url=#{imageUrl}
-                store_url=#{storeUrl}
+                image_url=#{imageUrl},
+                store_url=#{storeUrl},
                 has_discount=#{hasDiscount}
         WHERE barcode=#{barcode} and store_name=#{storeName} 
         """)
