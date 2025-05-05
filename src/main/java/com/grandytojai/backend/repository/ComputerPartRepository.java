@@ -112,7 +112,7 @@ public interface ComputerPartRepository {
                 UPPER(barcode) LIKE CONCAT('%', UPPER(#{searchValue}), '%')
                 OR UPPER(name) LIKE CONCAT('%', UPPER(#{searchValue}), '%')
             )
-        ORDER BY seen_in_scrape DESC, part_type ASC, price ASC
+        ORDER BY seen_in_scrape DESC, type ASC, price ASC
         LIMIT #{limit} OFFSET #{offset}
         """)
     List<ComputerPart> readComputerPartsDealBySearchValue(int limit, int offset, String searchValue);
@@ -129,7 +129,7 @@ public interface ComputerPartRepository {
                seen_in_scrape AS seenInScrape
         FROM computer_part
         WHERE has_discount = true
-        ORDER BY seen_in_scrape DESC, part_type ASC, price ASC
+        ORDER BY seen_in_scrape DESC, type ASC, price ASC
         LIMIT #{limit} OFFSET #{offset}
         """)
     List<ComputerPart> readComputerPartsDeal(int limit, int offset);
