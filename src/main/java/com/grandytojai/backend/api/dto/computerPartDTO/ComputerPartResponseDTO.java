@@ -25,6 +25,7 @@ public class ComputerPartResponseDTO {
     private String storeUrl;
     private String storeName;
     private Boolean hasDiscount;
+    private Boolean seenInScrape;
 
     public static ComputerPartResponseDTO of(ComputerPart computerPart) {
         return ComputerPartResponseDTO.builder()
@@ -36,6 +37,7 @@ public class ComputerPartResponseDTO {
             .storeUrl(computerPart.getStoreUrl())
             .storeName(computerPart.getStoreName())
             .hasDiscount(computerPart.getHasDiscount())
+            .seenInScrape(computerPart.getSeenInScrape())
             .build();
     }
 }
