@@ -85,10 +85,10 @@ public interface ComputerPartRepository {
                 has_discount AS hasDiscount
             FROM computer_part
             WHERE type=#{partType}
-            ORDER BY name, price
+            ORDER BY ${filter}
             LIMIT #{limit} OFFSET #{offset}
             """)
-    List<ComputerPart> readComputerPartsByType(String partType, int limit, int offset);
+    List<ComputerPart> readComputerPartsByType(String partType, int limit, int offset, String filter);
 
     @Select("""
         SELECT DISTINCT barcode, 

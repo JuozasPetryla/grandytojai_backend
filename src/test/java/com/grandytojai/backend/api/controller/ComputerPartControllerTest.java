@@ -8,7 +8,9 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Bean;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.web.servlet.MockMvc;
@@ -28,6 +30,7 @@ public class ComputerPartControllerTest {
 
     @MockBean
     private ComputerPartService computerPartService;
+
 
     @Test
     void testCountUniqueComputerParts() throws Exception {
@@ -49,7 +52,7 @@ public class ComputerPartControllerTest {
 
     @Test
     void testReadComputerPartsByType() throws Exception {
-        Mockito.when(computerPartService.readComputerPartsByType(anyString(), anyInt(), anyInt()))
+        Mockito.when(computerPartService.readComputerPartsByType(anyString(), anyInt(), anyInt(), anyString()))
                .thenReturn(ResponseEntity.ok(Collections.emptyList()));
 
         mockMvc.perform(MockMvcRequestBuilders.get("/api/computerParts/GPU")

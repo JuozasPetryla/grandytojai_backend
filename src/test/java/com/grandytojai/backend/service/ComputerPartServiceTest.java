@@ -53,9 +53,9 @@ public class ComputerPartServiceTest {
 
     @Test
     void testReadComputerPartsByType() {
-        when(computerPartRepository.readComputerPartsByType(anyString(), anyInt(), anyInt())).thenReturn(Collections.emptyList());
+        when(computerPartRepository.readComputerPartsByType(anyString(), anyInt(), anyInt(), anyString())).thenReturn(Collections.emptyList());
 
-        ResponseEntity<List<ComputerPartResponseDTO>> response = computerPartService.readComputerPartsByType("CPU", 10, 1);
+        ResponseEntity<List<ComputerPartResponseDTO>> response = computerPartService.readComputerPartsByType("CPU", 10, 1, "name");
 
         assertNotNull(response.getBody());
         assertTrue(response.getBody().isEmpty());
