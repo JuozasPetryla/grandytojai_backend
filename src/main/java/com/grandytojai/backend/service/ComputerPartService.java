@@ -137,4 +137,9 @@ public class ComputerPartService {
 
         return ResponseEntity.status(HttpStatus.OK).body(ComputerPartResponseDTO.of(computerPart));
     }
+
+    public ResponseEntity<Void> resetScrapingStatus(String storeName) {
+        computerPartRepository.resetScrapingStatus(storeName);
+        return ResponseEntity.ok().build();
+    }
 }

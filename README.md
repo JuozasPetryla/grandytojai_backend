@@ -4,9 +4,10 @@
 
 - Docker Desktop [docker link](https://www.docker.com/)
 - Java version 21 (JAVA_HOME environment variable added and PATH variable modified)
+- Copy over `.env.development` file contents to a locally created `.env` file
 
 ## Start the database
-In the project root directory run `docker compose up -d` to start the database and the database viewer
+In the project root directory run `docker compose --env-file .env up -d` to start the database and the database viewer
 Database will be available on `localhost:5432`
 
 The database viewer will be available on `localhost:8081`

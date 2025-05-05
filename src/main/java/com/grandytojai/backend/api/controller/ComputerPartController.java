@@ -25,6 +25,12 @@ public class ComputerPartController {
 
     private final ComputerPartService computerPartService;
 
+    @PutMapping(value = "/resetStatus")
+    @ResponseStatus(HttpStatus.OK)
+    public void resetScrapingStatus(@RequestParam(required = false) String storeName) {
+        computerPartService.resetScrapingStatus(storeName);
+    }
+
     @GetMapping(value = "/count")
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<Integer> countUniqueComputerParts(@RequestParam(required = false) Optional<String> searchValue) {
