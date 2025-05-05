@@ -1,4 +1,4 @@
-CREATE TABLE computer_part (
+CREATE TABLE computer_part_temp (
     barcode VARCHAR(64) NOT NULL,
     name VARCHAR(255),
     type VARCHAR(64),

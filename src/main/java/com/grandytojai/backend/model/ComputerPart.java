@@ -18,4 +18,5 @@ public class ComputerPart {
     private String storeUrl;
     private String storeName;
     private Boolean hasDiscount;
+    private Boolean seenInScrape;
 }
