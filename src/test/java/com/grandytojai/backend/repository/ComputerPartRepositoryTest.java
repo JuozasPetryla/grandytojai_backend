@@ -68,7 +68,7 @@ public class ComputerPartRepositoryTest {
 
     @Test
     void testReadComputerPartsByType() {
-        List<ComputerPart> parts = computerPartRepository.readComputerPartsByType("GPU", 10, 0);
+        List<ComputerPart> parts = computerPartRepository.readComputerPartsByType("GPU", 10, 0, "name");
         assertNotNull(parts);
     }
 

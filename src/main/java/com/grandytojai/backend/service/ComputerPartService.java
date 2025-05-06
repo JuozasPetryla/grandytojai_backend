@@ -46,9 +46,9 @@ public class ComputerPartService {
         return ResponseEntity.ok(count);
     }
     
-    public ResponseEntity<List<ComputerPartResponseDTO>> readComputerPartsByType(String partType, int limit, int page) {
+    public ResponseEntity<List<ComputerPartResponseDTO>> readComputerPartsByType(String partType, int limit, int page, String filter) {
         int offset = limit * (page - 1);
-        List<ComputerPartResponseDTO> responseDTOs = computerPartRepository.readComputerPartsByType(partType, limit, offset)
+        List<ComputerPartResponseDTO> responseDTOs = computerPartRepository.readComputerPartsByType(partType, limit, offset, filter)
             .stream()
             .map(ComputerPartResponseDTO::of)
             .toList();

@@ -91,10 +91,10 @@ public interface ComputerPartRepository {
                 seen_in_scrape AS seenInScrape
             FROM computer_part
             WHERE type=#{partType}
-            ORDER BY seen_in_scrape DESC, name ASC, price ASC
+            ORDER BY seen_in_scrape DESC, ${filter}
             LIMIT #{limit} OFFSET #{offset}
             """)
-    List<ComputerPart> readComputerPartsByType(String partType, int limit, int offset);
+    List<ComputerPart> readComputerPartsByType(String partType, int limit, int offset, String filter);
 
     @Select("""
         SELECT DISTINCT barcode, 

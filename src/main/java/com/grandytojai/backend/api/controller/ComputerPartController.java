@@ -45,8 +45,13 @@ public class ComputerPartController {
     
     @GetMapping(value = "/{partType}")
     @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<List<ComputerPartResponseDTO>> readComputerPartsByType(@PathVariable(value="partType") String partType, @RequestParam(defaultValue = "100") int limit, @RequestParam(defaultValue = "1") int page) {
-        return computerPartService.readComputerPartsByType(partType, limit, page);
+    public ResponseEntity<List<ComputerPartResponseDTO>> readComputerPartsByType(
+            @PathVariable(value="partType") String partType,
+            @RequestParam(defaultValue = "100") int limit,
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "name, price ASC") String filter
+    ) {
+        return computerPartService.readComputerPartsByType(partType, limit, page, filter);
     }
 
     @GetMapping(value = "/part")
