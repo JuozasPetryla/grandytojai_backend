@@ -142,4 +142,14 @@ public class ComputerPartService {
         computerPartRepository.resetScrapingStatus(storeName);
         return ResponseEntity.ok().build();
     }
+
+    public ResponseEntity<List<ComputerPartResponseDTO>> readComputerPartsBySearchValue(int limit, int page, String searchValue, String filter) {
+        int offset = limit * (page - 1);
+        List<ComputerPartResponseDTO> responseDTOs = computerPartRepository.readComputerPartsForSearchPage(limit, offset, searchValue, filter)
+                .stream()
+                .map(ComputerPartResponseDTO::of)
+                .toList();
+
+        return ResponseEntity.ok(responseDTOs);
+    }
 }

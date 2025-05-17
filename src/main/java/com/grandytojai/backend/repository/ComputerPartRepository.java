@@ -179,4 +179,30 @@ public interface ComputerPartRepository {
             FROM computer_part WHERE barcode IN ('${barcode}')
             """)
     List<ComputerPart> readComputerPartByBarcode(String barcode);
+
+    @Select("""
+    SELECT 
+        cp.barcode, 
+        cp.name AS partName, 
+        cp.type AS partType, 
+        cp.price, 
+        cp.image_url AS imageUrl,
+        cp.store_url AS storeUrl,
+        cp.store_name AS storeName,
+        cp.has_discount AS hasDiscount,
+        cp.seen_in_scrape AS seenInScrape
+    FROM computer_part cp
+    INNER JOIN (
+        SELECT barcode, MIN(price) AS min_price
+        FROM computer_part
+        WHERE
+            UPPER(barcode) LIKE CONCAT('%', UPPER(#{searchValue}), '%')
+            OR UPPER(name) LIKE CONCAT('%', UPPER(#{searchValue}), '%')
+        GROUP BY barcode
+    ) grouped_parts
+    ON cp.barcode = grouped_parts.barcode AND cp.price = grouped_parts.min_price
+    ORDER BY cp.seen_in_scrape DESC, ${filter}
+    LIMIT #{limit} OFFSET #{offset}
+""")
+    List<ComputerPart> readComputerPartsForSearchPage(int limit, int offset, String searchValue, String filter);
 }

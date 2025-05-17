@@ -92,4 +92,14 @@ public class ComputerPartController {
         return computerPartService.updateComputerPart(computerPartRequestDTO);
     }
 
+    @GetMapping(value = "/search")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<List<ComputerPartResponseDTO>> readComputerPartsBySearchValue(
+            @RequestParam(defaultValue = "100") int limit,
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "") String searchValue,
+            @RequestParam(defaultValue = "name, price ASC") String filter
+    ) {
+        return computerPartService.readComputerPartsBySearchValue(limit, page, searchValue, filter);
+    }
 }
