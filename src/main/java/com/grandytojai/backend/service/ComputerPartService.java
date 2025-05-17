@@ -28,6 +28,15 @@ public class ComputerPartService {
         return ResponseEntity.ok(responseDTOs);
     }
 
+    public ResponseEntity<List<ComputerPartResponseDTO>> readCheapestComputerPartsByBarcode(String barcode) {
+        List<ComputerPartResponseDTO> responseDTOs = computerPartRepository.readCheapestComputerPartByBarcode(barcode)
+                .stream()
+                .map(ComputerPartResponseDTO::of)
+                .toList();
+
+        return ResponseEntity.ok(responseDTOs);
+    }
+
     public ResponseEntity<Integer> countUniqueComputerParts(Optional<String> searchValue) {
         if (searchValue.isPresent()) {
             Integer count = computerPartRepository.countUniqueComputerPartsBySearchValue(searchValue.get());
@@ -48,6 +57,9 @@ public class ComputerPartService {
     
     public ResponseEntity<List<ComputerPartResponseDTO>> readComputerPartsByType(String partType, int limit, int page, String filter) {
         int offset = limit * (page - 1);
+        if (filter.contains("name")) {
+            filter = filter.replace("name", "partName");
+        }
         List<ComputerPartResponseDTO> responseDTOs = computerPartRepository.readComputerPartsByType(partType, limit, offset, filter)
             .stream()
             .map(ComputerPartResponseDTO::of)
