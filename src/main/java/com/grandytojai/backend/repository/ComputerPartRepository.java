@@ -78,23 +78,32 @@ public interface ComputerPartRepository {
             LIMIT #{limit} OFFSET #{offset}
             """)
     List<ComputerPart> readComputerPartsBySearchValue(int limit, int offset, String searchValue);
-    
+
     @Select("""
-            SELECT DISTINCT barcode, 
-                name AS partName, 
-                type AS partType, 
-                price, 
-                image_url AS imageUrl,
-                store_url AS storeUrl,
-                store_name AS storeName,
-                has_discount AS hasDiscount,
-                seen_in_scrape AS seenInScrape
-            FROM computer_part
-            WHERE type=#{partType}
-            ORDER BY seen_in_scrape DESC, ${filter}
-            LIMIT #{limit} OFFSET #{offset}
-            """)
+    SELECT 
+        cp.barcode, 
+        cp.name AS partName, 
+        cp.type AS partType, 
+        cp.price, 
+        cp.image_url AS imageUrl,
+        cp.store_url AS storeUrl,
+        cp.store_name AS storeName,
+        cp.has_discount AS hasDiscount,
+        cp.seen_in_scrape AS seenInScrape
+    FROM computer_part cp
+    INNER JOIN (
+        SELECT barcode, MIN(price) AS min_price
+        FROM computer_part
+        WHERE type = #{partType}
+        GROUP BY barcode
+    ) grouped_parts
+    ON cp.barcode = grouped_parts.barcode AND cp.price = grouped_parts.min_price
+    WHERE cp.type = #{partType}
+    ORDER BY cp.seen_in_scrape DESC, ${filter}
+    LIMIT #{limit} OFFSET #{offset}
+""")
     List<ComputerPart> readComputerPartsByType(String partType, int limit, int offset, String filter);
+
 
     @Select("""
         SELECT DISTINCT barcode, 
@@ -166,17 +175,63 @@ public interface ComputerPartRepository {
     void updateComputerPart(ComputerPart computerPart);
 
     @Select("""
-            SELECT DISTINCT barcode, 
-                name AS partName, 
-                type AS partType, 
-                price, 
+    SELECT * FROM (
+        SELECT 
+            barcode, 
+            name AS partName, 
+            type AS partType, 
+            price, 
+            image_url AS imageUrl,
+            store_url AS storeUrl,
+            store_name AS storeName,
+            has_discount AS hasDiscount,
+            ROW_NUMBER() OVER(PARTITION BY barcode ORDER BY price ASC) AS row_number,
+            seen_in_scrape AS seenInScrape 
+        FROM computer_part 
+        WHERE barcode IN ('${barcodes}') 
+    ) ranked_parts
+    WHERE row_number = 1
+""")
+    List<ComputerPart> readCheapestComputerPartByBarcode(String barcodes);
+
+    @Select("""
+            SELECT DISTINCT barcode,
+                name AS partName,
+                type AS partType,
+                price,
                 image_url AS imageUrl,
                 store_url AS storeUrl,
                 store_name AS storeName,
                 has_discount AS hasDiscount,
                 ROW_NUMBER() OVER(PARTITION BY barcode ORDER BY price) AS row_number,
-                seen_in_scrape AS seenInScrape 
+                seen_in_scrape AS seenInScrape
             FROM computer_part WHERE barcode IN ('${barcode}')
             """)
     List<ComputerPart> readComputerPartByBarcode(String barcode);
+
+    @Select("""
+    SELECT 
+        cp.barcode, 
+        cp.name AS partName, 
+        cp.type AS partType, 
+        cp.price, 
+        cp.image_url AS imageUrl,
+        cp.store_url AS storeUrl,
+        cp.store_name AS storeName,
+        cp.has_discount AS hasDiscount,
+        cp.seen_in_scrape AS seenInScrape
+    FROM computer_part cp
+    INNER JOIN (
+        SELECT barcode, MIN(price) AS min_price
+        FROM computer_part
+        WHERE
+            UPPER(barcode) LIKE CONCAT('%', UPPER(#{searchValue}), '%')
+            OR UPPER(name) LIKE CONCAT('%', UPPER(#{searchValue}), '%')
+        GROUP BY barcode
+    ) grouped_parts
+    ON cp.barcode = grouped_parts.barcode AND cp.price = grouped_parts.min_price
+    ORDER BY cp.seen_in_scrape DESC, ${filter}
+    LIMIT #{limit} OFFSET #{offset}
+""")
+    List<ComputerPart> readComputerPartsForSearchPage(int limit, int offset, String searchValue, String filter);
 }

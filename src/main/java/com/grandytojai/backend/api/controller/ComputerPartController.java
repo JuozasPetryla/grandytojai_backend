@@ -60,6 +60,12 @@ public class ComputerPartController {
         return computerPartService.readComputerPartsByBarcode(URLDecoder.decode(barcode, StandardCharsets.UTF_8));
     }
 
+    @GetMapping(value = "/cheapest/part")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<List<ComputerPartResponseDTO>> readCheapestComputerPartsByBarcode(@RequestParam String barcode) throws UnsupportedEncodingException{
+        return computerPartService.readCheapestComputerPartsByBarcode(URLDecoder.decode(barcode, StandardCharsets.UTF_8));
+    }
+
     @GetMapping(value = "/best-deals")
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<List<ComputerPartResponseDTO>> readComputerPartsDeals(
@@ -92,4 +98,14 @@ public class ComputerPartController {
         return computerPartService.updateComputerPart(computerPartRequestDTO);
     }
 
+    @GetMapping(value = "/search")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<List<ComputerPartResponseDTO>> readComputerPartsBySearchValue(
+            @RequestParam(defaultValue = "100") int limit,
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "") String searchValue,
+            @RequestParam(defaultValue = "name, price ASC") String filter
+    ) {
+        return computerPartService.readComputerPartsBySearchValue(limit, page, searchValue, filter);
+    }
 }
